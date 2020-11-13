@@ -1,0 +1,11 @@
+{% extends "article/base.html" %}
+
+{% block content %}
+
+<h2> {{that_post.title}} </h2>
+
+<p class="text-size16"> {{that_post.text|linebreaksbr}} </p>
+
+<p class="text-size16"> <a href="{% url 'home' page=1 %}">На главную</a></p>
+
+{% endblock %}

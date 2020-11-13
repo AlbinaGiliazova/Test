@@ -7,8 +7,7 @@ class Article(models.Model):
     Methods: __str__'''
 
     title = models.TextField(max_length=200)
-    text700 = models.CharField(max_length=700, blank=True)
-    text = models.TextField(max_length=5000)
+    text = models.TextField(max_length=5000, blank=True)
     url = models.URLField()  # default length 200
 
     def __str__(self):
@@ -16,8 +15,11 @@ class Article(models.Model):
 
         return self.title
 
+    @property
+    def text_700(self):
+        return self.text[:701] if len(self.text) > 700 else self.text
+
     class Meta:
         ordering = ["-id"]
         verbose_name = 'Статья'
         verbose_name_plural = 'Статьи'
-

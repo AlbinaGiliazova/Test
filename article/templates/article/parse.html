@@ -1,0 +1,20 @@
+{% extends "article/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+    <h2><b>Результаты парсинга</b></h2>
+    <br />
+    <ul>
+        <li>Распарсила страниц: {{ num_pages }}.</li>
+        <li>Получила новых статей: {{ num_urls }}.</li>
+        <li>Уже были в базе данных: {{ num_in_db }}.</li>
+    </ul>
+    <br />
+
+    <form method="post" action="../clear_db">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary mt-3">Очистить базу данных</button>
+    </form>
+
+{% endblock %}
