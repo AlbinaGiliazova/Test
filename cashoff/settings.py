@@ -139,3 +139,5 @@ STATIC_URL = '/static/'
 LOGOUT_REDIRECT_URL = '/'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+LOG_DB_FILE = os.path.join(BASE_DIR,'logs/db.log')

@@ -7,6 +7,7 @@ from datetime import datetime
 from django.http import Http404
 from django.core.paginator import Paginator
 from article.parsing import parse
+from Cashoff.log_config import db_logger
 
 
 default_context = {'year': datetime.now().year,}
@@ -40,7 +41,11 @@ class ClearDBView(View):
     '''Controller for clearing the database'''
 
     def post(self, request, *args, **kwargs):
+        '''POST request and logging'''
         Article.objects.all().delete()
+
+        logger = db_logger('article.views.py')
+        logger.info('Cleaned the database.')
         return redirect("/posts/1")
 
 

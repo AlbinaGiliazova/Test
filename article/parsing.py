@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from article.models import Article
+from Cashoff.log_config import db_logger
 
 
 def check_urls_in_db(titles, urls):
@@ -144,6 +145,9 @@ def parse():
 
         write_db(titles, texts, urls)
 
+    logger = db_logger('article.parsing.py')
+    logger.info(f'Parsed {num_pages} pages, {num_urls} new urls.' +
+                f' {num_in_db} already in the database.')
 
     return num_pages, num_urls, num_in_db
 
