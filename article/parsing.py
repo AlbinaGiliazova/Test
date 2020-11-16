@@ -5,8 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from article.models import Article
-from Cashoff.log_config import db_logger
-
+from Cashoff.log_config import article_logger
 
 def check_urls_in_db(titles, urls):
     '''Remove from the lists the articles with the urls that are already in the database'''
@@ -145,11 +144,14 @@ def parse():
 
         write_db(titles, texts, urls)
 
-    logger = db_logger('article.parsing.py')
-    logger.info(f'Parsed {num_pages} pages, {num_urls} new urls.' +
-                f' {num_in_db} already in the database.')
+    logger = article_logger('article.parsing.py')
+    logger.info('Parsed {0} pages, {1} new urls. {2} already in the database.'.\
+                format(num_pages, num_urls, num_in_db))
 
     return num_pages, num_urls, num_in_db
 
-if __name__ == '__main__':
+if __name__ == '__main__' and __package__ is None:
+
+    from os import sys, path
+    sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
     parse()

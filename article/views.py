@@ -7,7 +7,10 @@ from datetime import datetime
 from django.http import Http404
 from django.core.paginator import Paginator
 from article.parsing import parse
-from Cashoff.log_config import db_logger
+from Cashoff.log_config import article_logger
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from article.serializers import ArticleSerializer
 
 
 default_context = {'year': datetime.now().year,}
@@ -44,7 +47,7 @@ class ClearDBView(View):
         '''POST request and logging'''
         Article.objects.all().delete()
 
-        logger = db_logger('article.views.py')
+        logger = article_logger('article.views.py')
         logger.info('Cleaned the database.')
         return redirect("/posts/1")
 
@@ -85,3 +88,47 @@ class PostView(View):
             raise Http404("Статья с этим номером не найдена")
         return render(request,
             'article/post.html', context=context)
+
+
+class RestAboutView(View):
+    '''Controller for Rest about page'''
+
+    def get(self, request, *args, **kwargs):
+        '''GET request'''
+
+        context = default_context
+        articles = Article.objects.all()
+        paginator = Paginator(articles, 10)  # How many articles per page
+        context['num_pages'] = paginator.num_pages
+        context['min_id'] = Article.objects.order_by('id')[0].id
+        context['max_id'] = Article.objects.order_by('-id')[0].id
+        return render(request,
+            'article/rest_about.html', context=context)
+
+
+class RestPageView(APIView):
+    '''Rest API to get a page of articles'''
+
+    def get(self, request, page, *args, **kwargs):
+        '''GET request'''
+
+        # pagination https://docs.djangoproject.com/en/2.2/topics/pagination/
+        articles = Article.objects.all()
+        paginator = Paginator(articles, 10)  # How many articles per page
+        articles_page = paginator.get_page(page)
+        serializer = ArticleSerializer(articles_page, many=True)
+        return Response({"articles": serializer.data})
+
+class RestPostView(APIView):
+    '''Rest API to get a single article'''
+
+    def get(self, request, post_id, *args, **kwargs):
+        '''GET request'''
+
+        post = Article.objects.filter(id=post_id)
+        if post:
+            post = post[0]
+        else:
+            raise Http404("Статья с этим номером не найдена")
+        serializer = ArticleSerializer(post)
+        return Response({"articles": serializer.data})

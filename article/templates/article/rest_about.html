@@ -1,0 +1,16 @@
+{% extends "article/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+    <h2><b>Методы REST API:</b></h2>
+    <br />
+    <ul>
+        <li>листинг статей с пагинацией: rest/page/&lt;page_number&gt;;</li>
+        <li>отдельно взятая статья: rest/&lt;post_id&gt;.</li>
+    </ul>
+    <br />
+    <p>Доступно страниц: {{ num_pages }}.</p>
+    <p>Номера статей в диапазоне: {{ min_id }} - {{ max_id }}.</p>
+
+{% endblock %}
