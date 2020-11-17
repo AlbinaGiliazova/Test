@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'article',
+    'django_celery_beat',
 ]
 
 # The WhiteNoise middleware should be placed directly after the Django SecurityMiddleware
@@ -86,13 +87,8 @@ WSGI_APPLICATION = 'Cashoff.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Giliazova$default',
-        'USER': 'Giliazova',
-        'PASSWORD': 'MySQLJunior789*',
-        'HOST': 'Giliazova.mysql.pythonanywhere-services.com',
-        'PORT': '3306',
-        'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"}
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.environ.get('HYPERSKILL_TEST_DATABASE') or os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -141,4 +137,13 @@ LOGOUT_REDIRECT_URL = '/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 LOG_ARTICLE_FILE = os.path.join(BASE_DIR,'logs/article.log')
+
+# celery
+CELERY_BROKER_URL = 'redis://:Z80mBEm3fmHcJH02sSsYqnmBEgZK1lvX@redis-13583.c232.us-east-1-2.ec2.cloud.redislabs.com:13583/0'  
+CELERY_RESULT_BACKEND = 'redis://:Z80mBEm3fmHcJH02sSsYqnmBEgZK1lvX@redis-13583.c232.us-east-1-2.ec2.cloud.redislabs.com:13583/0'  
+CELERY_ACCEPT_CONTENT = ['application/json']  
+CELERY_RESULT_SERIALIZER = 'json'  
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_ENABLE_UTC = False
+CELERY_TIME_ZONE = 'Europe/Moscow'
 
